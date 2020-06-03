@@ -1,4 +1,4 @@
-FROM linuxserver/emby:latest
+FROM linuxserver/jellyfin:latest
 
 LABEL maintainer="https://github.com/rapejim"
 
