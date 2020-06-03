@@ -18,8 +18,8 @@ RUN apt-get update -qq && apt-get install -qq -y \
     && \
     # Update fuse.conf
     sed -i 's/#user_allow_other/user_allow_other/g' /etc/fuse.conf && \
-    chown abc:abc /plexdrive-install.sh && \
-    chmod +x /plexdrive-install.sh && \
+    chown abc:abc /plexdrive-install.sh /healthcheck.sh && \
+    chmod +x /plexdrive-install.sh /healthcheck.sh && \
     # Install plexdrive
     /plexdrive-install.sh && \
     # Cleanup
