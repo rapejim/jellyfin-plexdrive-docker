@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv bash
+
+# If the first run completed successfully, we are done
+if [ -e /.firstPlexdriveRunComplete ]; then
+  exit 0
+fi
+
+home="$(echo ~abc)"
+configSubDir="${home}/${PLEXDRIVE_CONFIG_DIR}"
+
+# Update ownership of dirs we need to write
+if [ "${CHANGE_PLEXDRIVE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
+  if [ -d "${configSubDir}" ]; then
+    chown -Rc abc:abc ${configSubDir}
+  else
+    echo "Plexdrive config folder does not exist"
+  fi
+fi
+
+mkdir -p ${PLEXDRIVE_MOUNT_POINT} 2>/dev/null
+chown -Rc abc:abc ${PLEXDRIVE_MOUNT_POINT}
+
+touch /.firstPlexdriveRunComplete

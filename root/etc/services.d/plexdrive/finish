@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+echo "Stopping Plexdrive"
+home="$(echo ~abc)"
+
+exec s6-setuidgid abc \
+  /bin/sh -c \
+    "/bin/fusermount -u -z ${PLEXDRIVE_MOUNT_POINT}"
