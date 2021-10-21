@@ -6,8 +6,8 @@ name: Publish on Docker & ghcr.io
 # documentation.
 
 on:
-  # schedule:
-  #   - cron: '0 0 * * 1'
+  schedule:
+    - cron: '0 0 * * 1'
   push:
     # branches: 
     #   - develop
