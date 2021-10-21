@@ -1,4 +1,4 @@
-FROM linuxserver/jellyfin:latest
+FROM lscr.io/linuxserver/jellyfin:nightly
 
 LABEL maintainer="https://github.com/rapejim"
 
