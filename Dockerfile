@@ -7,7 +7,7 @@ ENTRYPOINT ["/init"]
 ENV HOME="/config" \
     PLEXDRIVE_CONFIG_DIR=".plexdrive" \
     CHANGE_PLEXDRIVE_CONFIG_DIR_OWNERSHIP="true" \
-    PLEXDRIVE_MOUNT_POINT="/home/Emby" \
+    PLEXDRIVE_MOUNT_POINT="/home/Jellyfin" \
     EXTRA_PARAMS=""
 
 COPY root/ /
