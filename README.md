@@ -111,5 +111,5 @@ Those are not required unless you want to preserve your current folder structure
 
 Tags correspond to those of the official PMS Docker container:
 
-- `develop` — Nightly Jellyfin releases - nightly linuxserver baseimage.
+- `nightly` — Nightly Jellyfin releases - nightly linuxserver baseimage.
 - `latest` — Stable Jellyfin releases - latest linuxserver baseimage.
