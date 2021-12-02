@@ -1,8 +1,8 @@
-FROM lscr.io/linuxserver/jellyfin:nightly
+FROM lscr.io/linuxserver/jellyfin:latest
 
 LABEL maintainer="https://github.com/rapejim"
 
-ARG ARCH='amd64'
+ARG ARCH='arm64'
 ARG PLEXDRIVE_VERSION='5.1.0'
 
 ENTRYPOINT ["/init"]
