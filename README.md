@@ -2,7 +2,7 @@
 
 <div align="center"><img src="https://raw.githubusercontent.com/rapejim/jellyfin-plexdrive-docker/develop/images/banner.png" width="50%"></div>
 
-Combine the power of **Jellyfin Server** *(hereinafter Jellyfin)* with the media files of your Google Drive account *(or a Team Drive)* mounted it by **Plexdrive**.
+Combine the power of **Jellyfin Server** *(hereinafter Jellyfin)* with the media files of your Google Drive account *(or a [Shared Drive](https://support.google.com/a/users/answer/9310156?hl=en))* mounted it by [**Plexdrive**](https://github.com/plexdrive/plexdrive).
 
 Based on [Linuxserver Jellyfin image for Docker](https://fleet.linuxserver.io/image?name=linuxserver/jellyfin) and installed inside [Plexdrive v.5.1.0](https://github.com/plexdrive/plexdrive)<br>
 *Inspired on my other repository https://github.com/rapejim/pms-plexdrive-docker.* <br>
@@ -26,16 +26,16 @@ Or you can use the configuration files from a previous plexdrive installation (t
 ## ***Example run commands***
 ---
 
-### **Minimal** example run command *(host network)*:
+##### Command line host network
 
-```
-docker run --name Jellyfin -d \
+```bash
+docker run --name jellyfin -d \
     --net=host \
+    -e TZ="Europe/Madrid" \
     -e PUID=${UID} \
     -e PGID=$(id -g) \
-    -e TZ="Europe/Madrid" \
-    -v /docker/jellyfin-plexdrive/config:/config \
-    -v /docker/jellyfin-plexdrive/transcode:/transcode \
+    -v /docker/jellyfin/config:/config \
+    # -v /opt/vc/lib:/opt/vc/lib \ # Optional
     --privileged \
     --cap-add MKNOD \
     --cap-add SYS_ADMIN \
@@ -43,20 +43,20 @@ docker run --name Jellyfin -d \
     --restart=unless-stopped \
     rapejim/jellyfin-plexdrive-docker
 ```
-***NOTE:*** *You must replace `Europe/Madrid` for your time zone and `/docker/jellyfin-plexdrive/...` for your own path (if not use this folder structure). If you have config files (`config.json` and `token.json`) from previous installation of plexdrive, place it on `/docker/jellyfin-plexdrive/config/.plexdrive` folder.* 
-<br>
-<br>
-<br>
 
-### **Advanced** example run command *(bridge network)*:
+##### Command line bridge network
 
-```
-docker run --name Jellyfin -h Jellyfin -d \
-    -p 8096:8096 \
+```bash
+docker run --name jellyfin -h Jellyfin -d \
+    -p 8096:8096/tcp \
+    # -p 8920:8920/tcp \ # Optional HTTPS
+    # -p 1900:1900/udp \ # Optional DLNA
+    # -p 7359:7359/udp \ # Optional LAN discovery
+    -e TZ="Europe/Madrid" \
     -e PUID=${UID} \
     -e PGID=$(id -g) \
-    -e TZ="Europe/Madrid" \
-    -v /docker/jellyfin-plexdrive/config:/config \
+    -v /docker/jellyfin/config:/config \
+    # -v /opt/vc/lib:/opt/vc/lib \ # Optional
     --privileged \
     --cap-add MKNOD \
     --cap-add SYS_ADMIN \
@@ -64,6 +64,67 @@ docker run --name Jellyfin -h Jellyfin -d \
     --restart=unless-stopped \
     rapejim/jellyfin-plexdrive-docker
 ```
+
+
+
+##### Docker-compose host network
+
+```yaml
+version: '3.5'
+services:
+  jellyfin:
+    container_name: jellyfin
+    image: rapejim/jellyfin-plexdrive-docker # https://hub.docker.com/r/rapejim/jellyfin-plexdrive-docker
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    volumes:
+      - /docker/jellyfin/config:/config
+      # - /opt/vc/lib:/opt/vc/lib # Optional
+    environment:
+      TZ: Europe/Madrid
+      PUID: '1000'
+      PGID: '1000'
+    cap_add:
+      - MKNOD
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse"
+```
+
+##### Docker-compose bridge network
+
+```yaml
+version: '3.5'
+services:
+  jellyfin:
+    container_name: jellyfin
+    hostname: Jellyfin
+    image: rapejim/jellyfin-plexdrive-docker # https://hub.docker.com/r/rapejim/jellyfin-plexdrive-docker
+    restart: unless-stopped
+    privileged: true
+    network_mode: bridge
+    ports:
+      - 8096:8096
+    #   - 8920:8920 # Optional HTTPS
+    #   - 7359:7359/udp # Optional LAN discovery
+    #   - 1900:1900/udp # Optional DLNA
+    volumes:
+      - /docker/jellyfin/config:/config
+      # - /opt/vc/lib:/opt/vc/lib # Optional
+    environment:
+      TZ: Europe/Madrid
+      PUID: '1000'
+      PGID: '1000'
+    cap_add:
+      - MKNOD
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse"
+```
+
+
+
 ***NOTE:*** *You must replace `Europe/Madrid` for your time zone and `/docker/jellyfin-plexdrive/...` for your own path (if not use this folder structure). If you have config files (`config.json` and `token.json`) from previous installation of plexdrive, place it on `/docker/jellyfin-plexdrive/config/.plexdrive` folder.*
 <br>
 <br>
@@ -98,8 +159,8 @@ Those are not required unless you want to preserve your current folder structure
   - `--root-node-id=DCBAqwerty987654321_ASDF123456789` for a mount only the sub directory with id `DCBAqwerty987654321_ASDF123456789`
   - *[... plexdrive documentation for more info ...](https://github.com/plexdrive/plexdrive#usage)*
   -  **IMPORTANT:** *Not allowed "`-v` `--verbosity`", "`-c` `--config`", "`--cache-file`" or "`-o` `--fuse-options`" parameters, because are already used.*
-<br>
-<br>
+  <br>
+  <br>
 
 ***REMEMBER:*** *All options from the Linuxserver Jellyfin container are inherited. [Refer to Linuxserver documentation for more info](https://docs.linuxserver.io/images/docker-jellyfin).*
 <br>
@@ -109,7 +170,7 @@ Those are not required unless you want to preserve your current folder structure
 ## ***Tags***
 ---
 
-Tags correspond to those of the official PMS Docker container:
+Tags correspond to those of the Jellyfin Linuxserver docker image:
 
 - `nightly` — Nightly Jellyfin releases - nightly linuxserver baseimage.
 - `latest` — Stable Jellyfin releases - latest linuxserver baseimage.
