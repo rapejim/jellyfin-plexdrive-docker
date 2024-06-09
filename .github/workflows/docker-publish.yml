@@ -6,9 +6,10 @@ name: Publish on Docker & ghcr.io
 # documentation.
 
 on:
-  # Scheduled trigger
+  # Scheduled trigger (every Monday at 00:00 UTC)
   schedule:
     - cron: '0 0 * * 1'
+  # On push commit trigger
   push:
     # branches: 
     #   - develop
@@ -20,7 +21,7 @@ on:
 
   # Allows manual trigger
   workflow_dispatch:
-  
+
   # Allows external webhook trigger
   repository_dispatch:
     types:
@@ -78,7 +79,7 @@ jobs:
           tags: |
             latest
           images: |
-            ${{ github.repository }}
+            ${{ env.IMAGE_NAME }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -91,3 +92,28 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      # Extract metadata (tags, labels) for Docker (Plexdrive 5.2.1)
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata (Plexdrive 5.2.1)
+        id: meta_pd521
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            pd521
+          images: |
+            ${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # Build and push Docker image (Plexdrive 5.2.1) with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image (Plexdrive 5.2.1)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          build-args: |
+            PLEXDRIVE_VERSION='5.2.1'
+          tags: ${{ steps.meta_pd521.outputs.tags }}
+          labels: ${{ steps.meta_pd521.outputs.labels }}
