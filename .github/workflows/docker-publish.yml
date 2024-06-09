@@ -114,6 +114,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           build-args: |
-            PLEXDRIVE_VERSION='5.2.1'
+            PLEXDRIVE_VERSION=5.2.1
           tags: ${{ steps.meta_pd521.outputs.tags }}
           labels: ${{ steps.meta_pd521.outputs.labels }}
