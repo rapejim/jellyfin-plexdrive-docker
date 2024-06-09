@@ -12,7 +12,7 @@ fi
 # Get plexdrive
 cd /tmp
 echo "Downloading https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH"
-wget "https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH" -O plexdrive
+wget "https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH" --no-verbose -O plexdrive
 chmod -c +x /tmp/plexdrive
 version=$(/tmp/plexdrive --version)
 
