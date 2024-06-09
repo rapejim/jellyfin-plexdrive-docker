@@ -11,7 +11,8 @@ fi
 
 # Get plexdrive
 cd /tmp
-wget "https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH" -q -O plexdrive
+echo "Downloading https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH"
+wget "https://github.com/plexdrive/plexdrive/releases/download/$PLEXDRIVE_VERSION/plexdrive-linux-$ARCH" -O plexdrive
 chmod -c +x /tmp/plexdrive
 version=$(/tmp/plexdrive --version)
 
