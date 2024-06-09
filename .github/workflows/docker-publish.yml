@@ -25,7 +25,7 @@ on:
   # Allows external webhook trigger
   repository_dispatch:
     types:
-      - "Jellyfin Update Webhook"
+      - "Jellyfin Nightly Update Webhook"
 
 env:
   # Use docker.io for Docker Hub if empty
