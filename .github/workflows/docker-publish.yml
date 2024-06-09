@@ -100,7 +100,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           tags: |
-            type=ref,event=branch,suffix="-pd521"
+            type=ref,event=branch,suffix=-pd521
           images: |
             ${{ env.IMAGE_NAME }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
